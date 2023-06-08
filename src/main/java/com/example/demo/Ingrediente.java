@@ -2,6 +2,10 @@ package com.example.demo;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +26,15 @@ public class Ingrediente {
 	@Size(min = 2, max = 255)
 	private String descrizioneProdotto;
 
+	
+	
+	
+	
+
+    @JsonIgnore
 	@ManyToMany(mappedBy = "ingredienti", cascade = CascadeType.REMOVE)
 	private List<Pizza> pizza;
+	
 
 	public Ingrediente() {
 	}

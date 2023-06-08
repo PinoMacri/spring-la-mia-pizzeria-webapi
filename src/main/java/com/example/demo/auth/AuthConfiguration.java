@@ -25,4 +25,6 @@ public class AuthConfiguration {
 				).logout(l->l.logoutSuccessUrl("/")
 				).build();
 	} 
+
+	
 }

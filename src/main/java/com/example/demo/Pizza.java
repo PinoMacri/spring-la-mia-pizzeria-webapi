@@ -3,6 +3,10 @@ package com.example.demo;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +16,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Pizza {
 	@Id
@@ -30,8 +34,11 @@ public class Pizza {
 	private Float prezzo;
 
 
+
     @OneToMany(mappedBy = "pizza", cascade = CascadeType.REMOVE)
     private List<Offerta> offerte;
+    
+	
 	@ManyToMany
 	private List <Ingrediente> ingredienti;
 
@@ -97,6 +104,7 @@ public class Pizza {
 		return offerte;
 	}
 
+	
 	public void setOfferte(List<Offerta> offerte) {
 		this.offerte = offerte;
 	}
@@ -104,6 +112,7 @@ public class Pizza {
 	public List <Ingrediente> getIngredienti(){
 		return ingredienti;
 	}
+	
 	
 	public void setIngredienti(List<Ingrediente> ingredienti) {
 		this.ingredienti = ingredienti;

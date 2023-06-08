@@ -85,19 +85,34 @@ public class PizzaController {
 
 	@PostMapping("/admin/pizze/store")
 	public String store(Model model, @Valid @ModelAttribute Pizza pizza, BindingResult bindingResult,
-	        @RequestParam(value = "ingredientiSelezionati", required = false) List<Integer> ingredientiSelezionati) {
-		if (bindingResult.hasErrors()) {
-			for (ObjectError err : bindingResult.getAllErrors()) {
-				System.err.println("errore: " + err.getDefaultMessage());
-			}
-			model.addAttribute("pizza", pizza);
-			model.addAttribute("errors", bindingResult);
-			return "create";
-		}
+	                    @RequestParam(value = "ingredientiSelezionati", required = false) List<Integer> ingredientiSelezionati) {
+	    if (bindingResult.hasErrors()) {
+	        for (ObjectError err : bindingResult.getAllErrors()) {
+	            System.err.println("errore: " + err.getDefaultMessage());
+	        }
+	        model.addAttribute("pizza", pizza);
+	        model.addAttribute("errors", bindingResult);
+	        return "create";
+	    }
 
-		pizzaService.save(pizza);
-		 return "redirect:/users/pizze";
+	    Pizza existingPizza = new Pizza(); // Creazione di un nuovo oggetto Pizza
+	    existingPizza.setNome(pizza.getNome());
+	    existingPizza.setDescrizione(pizza.getDescrizione());
+	    existingPizza.setFoto(pizza.getFoto());
+	    existingPizza.setPrezzo(pizza.getPrezzo());
+
+	    if (ingredientiSelezionati != null) {
+	        List<Ingrediente> ingredienti = ingredienteService.findByIds(ingredientiSelezionati);
+	        existingPizza.setIngredienti(ingredienti);
+	    } else {
+	        // Se non sono stati selezionati ingredienti, rimuovi tutti gli ingredienti
+	        existingPizza.getIngredienti().clear();
+	    }
+
+	    pizzaService.save(existingPizza);
+	    return "redirect:/users/pizze";
 	}
+
 
 	@GetMapping("/admin/pizze/edit/{id}")
 	public String edit(Model model, @PathVariable int id) {
